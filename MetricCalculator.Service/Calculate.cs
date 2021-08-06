@@ -1,36 +1,101 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using MetricCalculator;
 using System.Threading.Tasks;
 
 namespace MetricCalculator.Service
 {
-    public static class Calculate
+    public class Calculate
     {
-        public static double MeterToCentimeter(double meter)
+        public double MeterToCentimeter(double meter)
         {
-            return meter * 100;
+            try
+            {
+            var calcValue = meter * 100;
+            Logger.LogInfo(meter, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(meter, ex);
+                return 0;
+            }
         }
-        public static double CentimeterToMeter(double centimeter)
+
+        public double CentimeterToMeter(double centimeter)
         {
-            return centimeter / 100;
+            try
+            {
+            var calcValue =  centimeter / 100;
+            Logger.LogInfo(centimeter, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(centimeter, ex);
+                return 0;
+            }
         }
-        public static double CentimeterToMillimeter(double centimeter)
+        public double CentimeterToMillimeter(double centimeter)
         {
-            return centimeter * 10;
+            try
+            {
+            var calcValue = centimeter * 10;
+            Logger.LogInfo(centimeter, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(centimeter, ex);
+                return 0;
+            }
         }
-        public static double MillimeterToCentimeter(double millimeter)
+        public double MillimeterToCentimeter(double millimeter)
         {
-            return millimeter / 10;
+            try
+            {
+            var calcValue = millimeter / 10;
+            Logger.LogInfo(millimeter, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(millimeter, ex);
+                return 0;
+            }
         }
-        public static double MeterToInch(double meter)
+        public double MeterToInch(double meter)
         {
-            return meter * 39.36;
+            try
+            {
+            var calcValue = meter * 39.36;
+            Logger.LogInfo(meter, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(meter, ex);
+                return 0;
+            }
         }
-        public static double InchToMeter(double inch)
+        public double InchToMeter(double inch)
         {
-            return inch / 39.36;
+            try
+            {
+            var calcValue = inch / 39.36;
+            Logger.LogInfo(inch, calcValue, MethodBase.GetCurrentMethod().Name);
+            return calcValue;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(inch, ex);
+                return 0;
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using MetricCalculator.Service;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -9,21 +11,46 @@ namespace MetricCalculator
     {
         static void Main(string[] args)
         {
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var Calculate = serviceProvider.GetService<Calculate>();
+
+            try
+            {
+            StartProgram(Calculate);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.GetType()}: {ex.Message}");
+                CloseApplication();
+            }
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddLogging(config => config.AddConsole()).AddTransient<Calculate>();
+        }
+
+        private static void StartProgram(Calculate calculate)
+        {
             HomeScreen();
 
             string optionEntry;
-            Regex homeRegex = new Regex("[^1-7]");
+            Regex homeRegex = new("[^1-7]");
             do
             {
                 optionEntry = Console.ReadLine();
 
-                if (homeRegex.IsMatch(optionEntry) == false)
+                if (homeRegex.IsMatch(optionEntry) == true)
                 {
                     Console.WriteLine("Please enter a valid number to redirect");
                 }
-            } while (homeRegex.IsMatch(optionEntry) == false);
+            } while (homeRegex.IsMatch(optionEntry) == true);
 
-            ExecuteSelectedOption(optionEntry);
+            ExecuteSelectedOption(optionEntry, calculate);
         }
 
         private static void HomeScreen()
@@ -35,7 +62,7 @@ namespace MetricCalculator
                 "5.Meter naar inch \n6.Inch naar meter \n7.Afsluiten \n");
         }
 
-        private static void ExecuteSelectedOption(string optionEntry)
+        private static void ExecuteSelectedOption(string optionEntry, Calculate calculate)
         {
             Console.Clear();
 
@@ -44,27 +71,27 @@ namespace MetricCalculator
             {
                 case 1:
                     Console.WriteLine("Meter to Centimeter");
-                    ReadCalculateShowRedirect(optionEntry, "Meter", "Centimeter");
+                    ReadCalculateShowRedirect(optionEntry, "Meter", "Centimeter", calculate);
                     break;
                 case 2:
                     Console.WriteLine("Centimeter to Meter");
-                    ReadCalculateShowRedirect(optionEntry, "Centimeter", "Meter");
+                    ReadCalculateShowRedirect(optionEntry, "Centimeter", "Meter", calculate);
                     break;
                 case 3:
                     Console.WriteLine("Centimeter to Millimeter");
-                    ReadCalculateShowRedirect(optionEntry, "Centimeter", "Millimeter");
+                    ReadCalculateShowRedirect(optionEntry, "Centimeter", "Millimeter", calculate);
                     break;
                 case 4:
                     Console.WriteLine("Millimeter to Centimeter");
-                    ReadCalculateShowRedirect(optionEntry, "Millimeter", "Centimeter");
+                    ReadCalculateShowRedirect(optionEntry, "Millimeter", "Centimeter", calculate);
                     break;
                 case 5:
                     Console.WriteLine("Meter to Inch");
-                    ReadCalculateShowRedirect(optionEntry, "Meter", "Inch");
+                    ReadCalculateShowRedirect(optionEntry, "Meter", "Inch", calculate);
                     break;
                 case 6:
                     Console.WriteLine("Inch to Meter");
-                    ReadCalculateShowRedirect(optionEntry, "Inch", "Meter");
+                    ReadCalculateShowRedirect(optionEntry, "Inch", "Meter", calculate);
                     break;
                 case 7:
                     CloseApplication();
@@ -74,7 +101,7 @@ namespace MetricCalculator
             }
         }
 
-        private static void ReadCalculateShowRedirect(string optionEntry, string firstType, string secondType)
+        private static void ReadCalculateShowRedirect(string optionEntry, string firstType, string secondType, Calculate calculate)
         {
             Console.WriteLine("Please enter a value to calculate");
 
@@ -86,12 +113,14 @@ namespace MetricCalculator
                     Console.WriteLine("Please enter a valid value to calculate");
             } while (Double.Parse(value) <= 0);
 
-            var calculatedValue = GetCalculatedValue(value, firstType, secondType);
-            Console.WriteLine($"{value} {firstType} = {calculatedValue} {secondType}");
-            AfterCalculationOptionSelection(optionEntry);
+            var calculatedValue = GetCalculatedValue(value, optionEntry, calculate);
+            if (calculatedValue > 0)
+                Console.WriteLine($"{value} {firstType} = {calculatedValue} {secondType}");
+
+            AfterCalculationOptionSelection(optionEntry, calculate);
         }
 
-        private static double GetCalculatedValue(string value, string firstType, string secondType)
+        private static double GetCalculatedValue(string value, string optionEntry, Calculate Calculate)
         {
             double doubleValue = Double.Parse(value);
 
@@ -99,22 +128,22 @@ namespace MetricCalculator
             {
                 Console.WriteLine("Please enter a valid value to calculate");
                 var value2 = Console.ReadLine();
-                return GetCalculatedValue(value2, firstType, secondType); ;
+                return GetCalculatedValue(value2, optionEntry, Calculate); ;
             }
 
-            switch (firstType+secondType)
+            switch (int.Parse(optionEntry))
             {
-                case "MeterCentimeter":
+                case 1:
                     return Calculate.MeterToCentimeter(doubleValue);
-                case "CentimeterMeter":
+                case 2:
                     return Calculate.CentimeterToMeter(doubleValue);
-                case "CentimeterMillimeter":
+                case 3:
                     return Calculate.CentimeterToMillimeter(doubleValue);
-                case "MillimeterCentimeter":
+                case 4:
                     return Calculate.MillimeterToCentimeter(doubleValue);
-                case "MeterInch":
+                case 5:
                     return Calculate.MeterToInch(doubleValue);
-                case "InchMeter":
+                case 6:
                     return Calculate.InchToMeter(doubleValue);
                 default:
                     break;
@@ -129,7 +158,7 @@ namespace MetricCalculator
             Environment.Exit(0);
         }
 
-        private static void AfterCalculationOptionSelection(string optionEntry)
+        private static void AfterCalculationOptionSelection(string optionEntry, Calculate calculate)
         {
             Console.WriteLine("\nPlease select one of the following options: " +
                 "\n1.Opnieuw berekenen \n2.Terug \n3.Afsluiten");
@@ -140,21 +169,21 @@ namespace MetricCalculator
             {
                 afterCalcOptionEntry = Console.ReadLine();
 
-                if (optionSelectionRegex.IsMatch(afterCalcOptionEntry) == false)
+                if (optionSelectionRegex.IsMatch(afterCalcOptionEntry) == true)
                 {
                     Console.WriteLine("Please enter a valid number to redirect");
                 }
-            } while (optionSelectionRegex.IsMatch(afterCalcOptionEntry) == false);
+            } while (optionSelectionRegex.IsMatch(afterCalcOptionEntry) == true);
 
             switch (int.Parse(afterCalcOptionEntry))
             {
                 case 1:
-                    ExecuteSelectedOption(optionEntry);
+                    ExecuteSelectedOption(optionEntry, calculate);
                     break;
                 case 2:
                     HomeScreen();
                     var homeScreenOptionEntry = Console.ReadLine();
-                    ExecuteSelectedOption(homeScreenOptionEntry);
+                    ExecuteSelectedOption(homeScreenOptionEntry, calculate);
                     break;
                 case 3:
                     CloseApplication();
