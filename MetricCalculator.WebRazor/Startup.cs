@@ -27,6 +27,7 @@ namespace MetricCalculator.WebRazor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
             services.AddDbContext<MetricCalculatorDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 

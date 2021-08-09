@@ -21,10 +21,10 @@
                 <input asp-for="Calculation.BeforeValue" class="form-control" />
                 <span asp-validation-for="Calculation.BeforeValue" class="text-danger"></span>
             </div>
-            @if (Model.AfterValueInt > 0)
+            @if (Model.LastCalculationTypeName != null)
             {
                 <div class="form-group">
-                    <label class="control-label">Calculated value: @Model.AfterValueInt</label>
+                    <label class="control-label">@Model.LastCalculationBefore @Model.LastCalculationTypeName = @Model.LastCalculationAfter</label>
                 </div>
             }
             <div class="form-group">

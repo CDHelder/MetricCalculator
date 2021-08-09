@@ -24,11 +24,8 @@ namespace MetricCalculator.WebRazor.Pages
 
         public IActionResult OnGet()
         {
-            Calculation = null;
-            if (AfterCalculation != null)
-                LastCalculation = AfterCalculation;
-            
-            ViewData["CalculationTypeId"] = new SelectList(_context.CalculationTypes, "Id", "Name");
+            ViewData["CalculationTypeId"] = new SelectList(_context.CalculationTypes.ToList(), "Id", "Name");
+
             return Page();
         }
 
@@ -36,9 +33,11 @@ namespace MetricCalculator.WebRazor.Pages
         public Calculation Calculation { get; set; }
 
         [TempData]
-        public Calculation AfterCalculation { get; set; }
-
-        public Calculation LastCalculation { get; set; }
+        public string LastCalculationAfter { get; set; }
+        [TempData]
+        public string LastCalculationBefore { get; set; }
+        [TempData]
+        public string LastCalculationTypeName { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -52,7 +51,9 @@ namespace MetricCalculator.WebRazor.Pages
             _context.Logs.Add(Calculation);
             await _context.SaveChangesAsync();
 
-            AfterCalculation = Calculation;
+            LastCalculationAfter = Calculation.AfterValue.ToString();
+            LastCalculationBefore = Calculation.BeforeValue.ToString();
+            LastCalculationTypeName = _context.CalculationTypes.FirstOrDefault(u => u.Id == Calculation.CalculationTypeId).Name;
             return RedirectToPage("/Calculate");
         }
 
