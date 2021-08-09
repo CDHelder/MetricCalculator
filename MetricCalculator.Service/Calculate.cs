@@ -12,90 +12,56 @@ namespace MetricCalculator.Service
 {
     public class Calculate
     {
-        public double MeterToCentimeter(double meter)
+        public double MeterToCentimeter(double meter, bool LogInfo)
         {
-            try
-            {
-            var calcValue = meter * 100;
-            Logger.LogInfo(meter, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(meter, ex);
-                return 0;
-            }
+            return Calc(meter, 100, LogInfo, false);
         }
+        public double CentimeterToMeter(double centimeter, bool LogInfo)
+        {
+            return Calc(centimeter, 100, LogInfo, true);
+        }
+        public double CentimeterToMillimeter(double centimeter, bool LogInfo)
+        {
+            return Calc(centimeter, 10, LogInfo, false);
+        }
+        public double MillimeterToCentimeter(double millimeter, bool logInfo)
+        {
+            return Calc(millimeter, 10, logInfo, true);
+        }
+        public double MeterToInch(double meter, bool LogInfo)
+        {
+            return Calc(meter, 39.36, LogInfo, false);
+        }
+        public double InchToMeter(double inch, bool LogInfo)
+        {
+            return Calc(inch, 39.36, LogInfo, true);
+        }
+        double Calc(double input, double divideTimes, bool logInfo, bool divide)
+        {
+            if (logInfo == true)
+            {
+                try
+                {
+                    double calcValue;
+                    if (divide == true)
+                        calcValue = input / divideTimes;
+                    else
+                        calcValue = input * divideTimes;
 
-        public double CentimeterToMeter(double centimeter)
-        {
-            try
-            {
-            var calcValue =  centimeter / 100;
-            Logger.LogInfo(centimeter, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
+                    Logger.LogInfo(input, calcValue, MethodBase.GetCurrentMethod().Name);
+                    return calcValue;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(input, ex);
+                    return 0;
+                }
             }
-            catch (Exception ex)
-            {
-                Logger.LogError(centimeter, ex);
-                return 0;
-            }
-        }
-        public double CentimeterToMillimeter(double centimeter)
-        {
-            try
-            {
-            var calcValue = centimeter * 10;
-            Logger.LogInfo(centimeter, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(centimeter, ex);
-                return 0;
-            }
-        }
-        public double MillimeterToCentimeter(double millimeter)
-        {
-            try
-            {
-            var calcValue = millimeter / 10;
-            Logger.LogInfo(millimeter, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(millimeter, ex);
-                return 0;
-            }
-        }
-        public double MeterToInch(double meter)
-        {
-            try
-            {
-            var calcValue = meter * 39.36;
-            Logger.LogInfo(meter, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(meter, ex);
-                return 0;
-            }
-        }
-        public double InchToMeter(double inch)
-        {
-            try
-            {
-            var calcValue = inch / 39.36;
-            Logger.LogInfo(inch, calcValue, MethodBase.GetCurrentMethod().Name);
-            return calcValue;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(inch, ex);
-                return 0;
-            }
+
+            if (divide == true)
+                return input / divideTimes;
+            else
+                return input * divideTimes;
         }
     }
 }

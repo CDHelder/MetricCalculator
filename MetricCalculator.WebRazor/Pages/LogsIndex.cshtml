@@ -1,0 +1,52 @@
+﻿@page
+@model MetricCalculator.WebRazor.Pages.LogsIndexModel
+
+@{
+    ViewData["Title"] = "LogsIndex";
+}
+
+<h1>LogsIndex</h1>
+
+<p>
+    <a asp-page="Calculate">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Calculation[0].DateTimeCalculated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calculation[0].BeforeValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calculation[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calculation[0].AfterValue)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Calculation) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTimeCalculated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BeforeValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AfterValue)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

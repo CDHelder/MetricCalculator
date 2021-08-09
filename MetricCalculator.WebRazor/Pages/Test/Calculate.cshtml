@@ -1,0 +1,37 @@
+﻿@model Calculation
+
+@{
+    ViewData["Title"] = "Calculate";
+}
+
+<h1>Calculate</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Calculate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CalculationTypeId" class="control-label">Calculation Type</label>
+                @Html.DropDownListFor(x => x.CalculationTypeId, new SelectList(ViewBag.CalculationTypes, "Id", "Name"), new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="BeforeValue" class="control-label">Value</label>
+                <input asp-for="BeforeValue" class="form-control" />
+                <span asp-validation-for="BeforeValue" class="text-danger"></span>
+            </div>
+            @*@if (Model.AfterValue > 0)
+            {
+            <div class="form-group">
+                <a asp-for="BeforeValue" class="form-control" />
+            </div>
+            }*@
+            <div class="form-group">
+                <input type="submit" value="Calculate" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

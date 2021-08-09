@@ -20,7 +20,6 @@ namespace MetricCalculator
             try
             {
             StartProgram(Calculate);
-
             }
             catch (Exception ex)
             {
@@ -134,17 +133,17 @@ namespace MetricCalculator
             switch (int.Parse(optionEntry))
             {
                 case 1:
-                    return Calculate.MeterToCentimeter(doubleValue);
+                    return Calculate.MeterToCentimeter(doubleValue, true);
                 case 2:
-                    return Calculate.CentimeterToMeter(doubleValue);
+                    return Calculate.CentimeterToMeter(doubleValue, true);
                 case 3:
-                    return Calculate.CentimeterToMillimeter(doubleValue);
+                    return Calculate.CentimeterToMillimeter(doubleValue, true);
                 case 4:
-                    return Calculate.MillimeterToCentimeter(doubleValue);
+                    return Calculate.MillimeterToCentimeter(doubleValue, true);
                 case 5:
-                    return Calculate.MeterToInch(doubleValue);
+                    return Calculate.MeterToInch(doubleValue, true);
                 case 6:
-                    return Calculate.InchToMeter(doubleValue);
+                    return Calculate.InchToMeter(doubleValue, true);
                 default:
                     break;
             }
